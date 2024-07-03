@@ -1,3 +1,4 @@
+# voice_to_text.py
 import tkinter as tk
 from tkinter import messagebox
 import whisper
@@ -11,6 +12,7 @@ import threading
 recording = False
 audio_data = []
 fs = 44100  # Sampling rate
+transcription_text = None
 
 # Function to start recording
 def start_recording():
@@ -36,35 +38,39 @@ def stop_recording():
     messagebox.showinfo("Recording", "Recording stopped.")
     temp_file = tempfile.NamedTemporaryFile(suffix=".wav", delete=False)
     write(temp_file.name, fs, np.array(audio_data, dtype=np.int16))
-    transcribe_audio(temp_file.name)
+    transcription = transcribe_audio(temp_file.name)
     os.remove(temp_file.name)
+    transcription_text.set(transcription)
 
 # Function to transcribe audio using Whisper AI
 def transcribe_audio(temp_file):
     model = whisper.load_model("base")
     result = model.transcribe(temp_file)
     transcription = result["text"]
-    print("Transcription:", transcription)  # Print transcription in the terminal
-    transcription_text.set(transcription)
+    return transcription
 
-# Main application window
-app = tk.Tk()
-app.title("Voice to Text with Whisper AI")
+# Function to initialize and run the GUI
+def run_voice_to_text_app():
+    global transcription_text
+    app = tk.Tk()
+    app.title("Voice to Text with Whisper AI")
 
-# Create start and stop buttons
-start_button = tk.Button(app, text="Start Recording", command=start_recording)
-start_button.pack(pady=10)
+    start_button = tk.Button(app, text="Start Recording", command=start_recording)
+    start_button.pack(pady=10)
 
-stop_button = tk.Button(app, text="Stop Recording", command=stop_recording)
-stop_button.pack(pady=10)
+    stop_button = tk.Button(app, text="Stop Recording", command=stop_recording)
+    stop_button.pack(pady=10)
 
-# Label and text box for transcription
-transcription_label = tk.Label(app, text="Transcription:")
-transcription_label.pack(pady=10)
+    transcription_label = tk.Label(app, text="Transcription:")
+    transcription_label.pack(pady=10)
 
-transcription_text = tk.StringVar()
-transcription_entry = tk.Entry(app, textvariable=transcription_text, width=50)
-transcription_entry.pack(pady=10)
+    transcription_text = tk.StringVar()
+    transcription_entry = tk.Entry(app, textvariable=transcription_text, width=50)
+    transcription_entry.pack(pady=10)
 
-# Run the application
-app.mainloop()
+    app.mainloop()
+
+    return transcription_text.get()
+
+if __name__ == "__main__":
+    run_voice_to_text_app()
