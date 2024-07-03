@@ -1,0 +1,4 @@
+pyautogen
+autogen
+mavsdk
+python-dotenv
