@@ -57,7 +57,7 @@ def run_voice_to_text_app():
     app.title("Voice to Text with Whisper AI")
 
     # Load mic icon image
-    mic_image = Image.open("mic_icon.png").resize((50, 50), Image.ANTIALIAS)
+    mic_image = Image.open("mic_icon.png").resize((50, 50), Image.LANCZOS)
     mic_photo = ImageTk.PhotoImage(mic_image)
 
     record_button = tk.Button(app, image=mic_photo, bg='white', bd=0, highlightthickness=0)
