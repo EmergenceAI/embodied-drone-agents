@@ -14,9 +14,11 @@ recording = False
 audio_data = []
 fs = 44100  # Sampling rate
 transcription_text = None
+app = None  # Define app as a global variable
 
 # Function to start recording
 def start_recording(event):
+    print("Starting recording")
     global recording
     global audio_data
     audio_data = []  # Reset audio data
@@ -34,6 +36,7 @@ def record_audio():
 
 # Function to stop recording
 def stop_recording(event):
+    print("Stopping recording")
     global recording
     recording = False
     record_button.config(bg='white')
@@ -42,6 +45,8 @@ def stop_recording(event):
     transcription = transcribe_audio(temp_file.name)
     os.remove(temp_file.name)
     transcription_text.set(transcription)
+    print(f"Transcription in stop_recording: {transcription}")  # Debug print
+    app.quit()  # Quit the app after transcription
 
 # Function to transcribe audio using Whisper AI
 def transcribe_audio(temp_file):
@@ -52,7 +57,7 @@ def transcribe_audio(temp_file):
 
 # Function to initialize and run the GUI
 def run_voice_to_text_app():
-    global transcription_text, record_button
+    global transcription_text, record_button, app
     app = tk.Tk()
     app.title("Voice to Text with Whisper AI")
 

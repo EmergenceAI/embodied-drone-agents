@@ -3,6 +3,13 @@ import os
 import subprocess
 from autogen import AssistantAgent, UserProxyAgent
 
+from dotenv import load_dotenv
+import openai 
+
+load_dotenv() 
+
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
 # Define the mapping of commands to scripts
 function_map = {
     "takeoff": "takeoff.py",
@@ -12,16 +19,12 @@ function_map = {
 
 # System message to initialize the assistant
 system_message = (
-    "You are a drone assistant. You will take user commands to control the drone."
-    "Your task is to convert natural language commands into drone SDK function calls."
+    "You are a drone assistant. You will use transcribed user voice commands to control the drone by calling the appropriate MavSDK python scripts, contained in the function_map."
     "Respond only with the commands in the correct order required to execute the task, separated by 'and'."
-    "For example, if the user specifies 'go to the coordinates (10, 3, -10),', you should run the fly_to_coordinates.py script after first taking off, knowing to pass 10, 3, and -10 as parameters for the script, and respond with 'takeoff and fly to (10, 3, -10)'."
-    "You should also understand variations of commands."
-    "For example, 'go to coordinates (10, 3, -10)' is the same as 'go to (10, 3, -10)' or 'fly to (10, 3, -10)', or 'fly to coordinates (10, 3, -10)'."
     "Do not include any explanations or additional text."
 )
 
-llm_config = {"model": "gpt-4", "api_key": "YOUR_OPENAI_API_KEY"}
+llm_config = {"model": "gpt-4", "api_key": OPENAI_API_KEY}
 assistant = AssistantAgent("assistant", llm_config=llm_config)
 
 # Create a user proxy agent to handle the user prompts
