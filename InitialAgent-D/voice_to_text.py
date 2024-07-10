@@ -1,4 +1,3 @@
-# voice_to_text.py
 import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk
@@ -45,8 +44,7 @@ def stop_recording(event):
     transcription = transcribe_audio(temp_file.name)
     os.remove(temp_file.name)
     transcription_text.set(transcription)
-    print(f"Transcription in stop_recording: {transcription}")  # Debug print
-    app.quit()  # Quit the app after transcription
+    print(f"Transcription: {transcription}")  # Debug print
 
 # Function to transcribe audio using Whisper AI
 def transcribe_audio(temp_file):
@@ -77,8 +75,13 @@ def run_voice_to_text_app():
     transcription_entry = tk.Entry(app, textvariable=transcription_text, width=50)
     transcription_entry.pack(pady=10)
 
+    # Add exit button
+    exit_button = tk.Button(app, text="Exit", command=app.quit)
+    exit_button.pack(pady=10)
+
     app.mainloop()
 
+    print(transcription_text.get())  # Print the transcription after the app is closed
     return transcription_text.get()
 
 if __name__ == "__main__":

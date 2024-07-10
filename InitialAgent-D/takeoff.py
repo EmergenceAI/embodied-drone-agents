@@ -24,12 +24,8 @@ async def run(height: float = 5):
     await drone.action.set_takeoff_altitude(height)
     await drone.action.takeoff()
 
+    # Wait for the drone to reach the takeoff altitude
     await asyncio.sleep(10)
-
-    print("-- Landing")
-    await drone.action.land()
-
-    await asyncio.sleep(5)
 
 if __name__ == "__main__":
     import sys

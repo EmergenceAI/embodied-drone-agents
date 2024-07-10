@@ -14,8 +14,6 @@ async def run():
     print("-- Landing")
     await drone.action.land()
 
-    await asyncio.sleep(5)
-
 if __name__ == "__main__":
     try:
         loop = asyncio.get_running_loop()
