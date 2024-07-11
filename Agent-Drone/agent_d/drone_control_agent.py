@@ -1,5 +1,6 @@
 from string import Template
 import autogen  # type: ignore
+import agentops
 
 from agent_d.skills import (
     takeoff, land, fly_to_coordinates, circle_a_point,
@@ -8,7 +9,9 @@ from agent_d.skills import (
 from agent_d.utils.helper_functions import example_helper
 from agent_d.utils.prompts import LLM_PROMPTS
 
+@agentops.track_agent(name='drone_control_agent')
 class DroneControlAgent:
+    @agentops.record_function('initialize_drone_control_agent')
     def __init__(self, config_list, user_proxy_agent): # type: ignore
         self.user_proxy_agent = user_proxy_agent
         user_ltm = self.__get_ltm()
@@ -29,50 +32,50 @@ class DroneControlAgent:
         )
         self.__register_skills()
 
+    @agentops.record_function('get_ltm')
     def __get_ltm(self):
         return None
 
+    @agentops.record_function('register_skills')
     def __register_skills(self):
-        self.user_proxy_agent.register_for_execution()(takeoff.run)
-        self.agent.register_for_llm(description="Take off the drone.")(takeoff.run)
+        self.__register_skill(takeoff.run, "Take off the drone.")
+        self.__register_skill(land.run, "Land the drone.")
+        self.__register_skill(fly_to_coordinates.fly_to, "Fly the drone to specified coordinates.")
+        self.__register_skill(circle_a_point.circle_a_point, "Circle the drone around a specific point.")
+        self.__register_skill(follow_me.follow_me, "Follow a moving object.")
+        self.__register_skill(return_to_launch.return_to_launch, "Return the drone to the launch point.")
+        self.__register_skill(rotate_to_specific_yaw.rotate_to_yaw, "Rotate the drone to a specific yaw angle.")
+        self.__register_skill(hover_at_location.hover_at_location, "Hover the drone at a specific location.")
+        self.__register_skill(example_helper, "Example helper function.")
 
-        self.user_proxy_agent.register_for_execution()(land.run)
-        self.agent.register_for_llm(description="Land the drone.")(land.run)
+        self.__register_reply_for_user_proxy()
+        self.__register_reply_for_agent()
 
-        self.user_proxy_agent.register_for_execution()(fly_to_coordinates.fly_to)
-        self.agent.register_for_llm(description="Fly the drone to specified coordinates.")(fly_to_coordinates.fly_to)
+    @agentops.record_function('register_skill')
+    def __register_skill(self, skill, description):
+        self.user_proxy_agent.register_for_execution()(skill)
+        self.agent.register_for_llm(description=description)(skill)
 
-        self.user_proxy_agent.register_for_execution()(circle_a_point.circle_a_point)
-        self.agent.register_for_llm(description="Circle the drone around a specific point.")(circle_a_point.circle_a_point)
-
-        self.user_proxy_agent.register_for_execution()(follow_me.follow_me)
-        self.agent.register_for_llm(description="Follow a moving object.")(follow_me.follow_me)
-
-        self.user_proxy_agent.register_for_execution()(return_to_launch.return_to_launch)
-        self.agent.register_for_llm(description="Return the drone to the launch point.")(return_to_launch.return_to_launch)
-
-        self.user_proxy_agent.register_for_execution()(rotate_to_specific_yaw.rotate_to_yaw)
-        self.agent.register_for_llm(description="Rotate the drone to a specific yaw angle.")(rotate_to_specific_yaw.rotate_to_yaw)
-
-        self.user_proxy_agent.register_for_execution()(hover_at_location.hover_at_location)
-        self.agent.register_for_llm(description="Hover the drone at a specific location.")(hover_at_location.hover_at_location)
-
-        self.user_proxy_agent.register_for_execution()(example_helper)
-        self.agent.register_for_llm(description="Example helper function.")(example_helper)
-
+    @agentops.record_function('register_reply_for_user_proxy')
+    def __register_reply_for_user_proxy(self):
         self.user_proxy_agent.register_reply(
             [autogen.Agent, None],
             reply_func=self.print_message_from_user_proxy,
             config={"callback": None},
         )
+
+    @agentops.record_function('register_reply_for_agent')
+    def __register_reply_for_agent(self):
         self.agent.register_reply(
             [autogen.Agent, None],
             reply_func=self.print_message_from_agent,
             config={"callback": None},
         )
 
+    @agentops.record_function('print_message_from_user_proxy')
     def print_message_from_user_proxy(self, *args, **kwargs):
         pass
 
+    @agentops.record_function('print_message_from_agent')
     def print_message_from_agent(self, *args, **kwargs):
         pass
