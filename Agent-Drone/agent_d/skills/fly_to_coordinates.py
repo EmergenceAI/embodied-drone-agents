@@ -1,9 +1,24 @@
-# filename: fly_to_coordinates.py
 import asyncio
+from typing import Annotated
 from mavsdk import System
 from mavsdk.offboard import OffboardError, PositionNedYaw
 
-async def fly_to(x, y, z):
+async def fly_to(
+    x: Annotated[float, "X coordinate to fly to"] = 0,
+    y: Annotated[float, "Y coordinate to fly to"] = 0,
+    z: Annotated[float, "Z coordinate (altitude) to fly to"] = 0
+):
+    """
+    Flies the drone to the specified coordinates.
+
+    Parameters:
+    x (float): X coordinate to fly to. Default is 0.
+    y (float): Y coordinate to fly to. Default is 0.
+    z (float): Z coordinate (altitude) to fly to. Default is 0.
+
+    Returns:
+    bool: True if the operation is successful, False otherwise.
+    """
     drone = System()
     await drone.connect(system_address="udp://:14540")
 
@@ -44,10 +59,27 @@ async def fly_to(x, y, z):
 
 if __name__ == "__main__":
     import sys
-    if len(sys.argv) != 4:
-        print("Usage: python3 fly_to_coordinates.py <x> <y> <z>")
-        sys.exit(1)
-    x = float(sys.argv[1])
-    y = float(sys.argv[2])
-    z = float(sys.argv[3])
+
+    # Set default values
+    x = 0
+    y = 0
+    z = 0
+
+    # Override default values with provided arguments
+    if len(sys.argv) > 1:
+        try:
+            x = float(sys.argv[1])
+        except ValueError:
+            print("Invalid x value. Using default x of 0.")
+    if len(sys.argv) > 2:
+        try:
+            y = float(sys.argv[2])
+        except ValueError:
+            print("Invalid y value. Using default y of 0.")
+    if len(sys.argv) > 3:
+        try:
+            z = float(sys.argv[3])
+        except ValueError:
+            print("Invalid z value. Using default z of 0.")
+
     asyncio.run(fly_to(x, y, z))

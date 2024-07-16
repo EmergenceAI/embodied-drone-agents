@@ -27,7 +27,20 @@ class DroneControlAgent:
                 "temperature": 0.0
             },
         )
+
+        self.user_proxy_agent = autogen.UserProxyAgent(
+            name="user_proxy_agent",
+            is_termination_msg=lambda x: x.get("content", "") and x.get("content", "").rstrip().endswith("TERMINATE"),
+            human_input_mode="NEVER",
+            max_consecutive_auto_reply=10,
+            code_execution_config={
+                "work_dir": "coding",
+                "use_docker": False,
+            },
+        )
+
         self.__register_skills()
+
 
     def __get_ltm(self):
         return None
@@ -76,3 +89,11 @@ class DroneControlAgent:
 
     def print_message_from_agent(self, *args, **kwargs):
         pass
+
+    async def run(self):
+        while True:
+            user_input = input("Enter your command: ")
+            if user_input.lower() == "exit":
+                break
+            response = await self.agent.process_input(user_input)
+            print(f"Agent response: {response}")

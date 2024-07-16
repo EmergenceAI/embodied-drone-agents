@@ -18,7 +18,7 @@ openai.api_key = OPENAI_API_KEY
 
 def main():
     # Initialize the DroneControlAgent
-    agent = DroneControlAgent(config_list=[], user_proxy_agent=None)
+    agent = DroneControlAgent(config_list=[], user_proxy_agent= None)
     
     # Run the agent (assuming run is an asyncio coroutine)
     asyncio.run(agent.run())

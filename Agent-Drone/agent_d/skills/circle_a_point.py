@@ -1,11 +1,27 @@
-# filename: circle_a_point.py
 import asyncio
-import sys
 import math
+from typing import Annotated
 from mavsdk import System
 from mavsdk.offboard import OffboardError, PositionNedYaw
 
-async def circle_a_point(radius, x_center, y_center, altitude):
+async def circle_a_point(
+    radius: Annotated[float, "Radius of the circle"] = 5,
+    x_center: Annotated[float, "X coordinate of the center point"] = 0,
+    y_center: Annotated[float, "Y coordinate of the center point"] = 0,
+    altitude: Annotated[float, "Altitude to maintain during circling"] = 5
+):
+    """
+    Circles the drone around a specific point at a given radius and altitude.
+
+    Parameters:
+    radius (float): Radius of the circle. Default is 5 meters.
+    x_center (float): X coordinate of the center point. Default is 0.
+    y_center (float): Y coordinate of the center point. Default is 0.
+    altitude (float): Altitude to maintain during circling. Default is 5 meters.
+
+    Returns:
+    bool: True if the operation is successful, False otherwise.
+    """
     drone = System()
     await drone.connect(system_address="udp://:14540")
 
@@ -61,11 +77,34 @@ async def circle_a_point(radius, x_center, y_center, altitude):
     print("-- Circle complete")
 
 if __name__ == "__main__":
-    if len(sys.argv) != 5:
-        print("Usage: python3 circle_a_point.py <radius> <x> <y> <altitude>")
-        sys.exit(1)
-    radius = float(sys.argv[1])
-    x_center = float(sys.argv[2])
-    y_center = float(sys.argv[3])
-    altitude = float(sys.argv[4])
+    import sys
+
+    # Set default values
+    radius = 5
+    x_center = 0
+    y_center = 0
+    altitude = 5
+
+    # Override default values with provided arguments
+    if len(sys.argv) > 1:
+        try:
+            radius = float(sys.argv[1])
+        except ValueError:
+            print("Invalid radius value. Using default radius of 5 meters.")
+    if len(sys.argv) > 2:
+        try:
+            x_center = float(sys.argv[2])
+        except ValueError:
+            print("Invalid x_center value. Using default x_center of 0.")
+    if len(sys.argv) > 3:
+        try:
+            y_center = float(sys.argv[3])
+        except ValueError:
+            print("Invalid y_center value. Using default y_center of 0.")
+    if len(sys.argv) > 4:
+        try:
+            altitude = float(sys.argv[4])
+        except ValueError:
+            print("Invalid altitude value. Using default altitude of 5 meters.")
+
     asyncio.run(circle_a_point(radius, x_center, y_center, altitude))

@@ -1,7 +1,17 @@
 import asyncio
+from typing import Annotated
 from mavsdk import System
 
-async def run(height: float = 5):
+async def run(height: Annotated[float, "Altitude to reach after takeoff"] = 5):
+    """
+    Takes off the drone to the specified height.
+
+    Parameters:
+    height (float): Altitude to reach after takeoff. Default is 5 meters.
+
+    Returns:
+    bool: True if takeoff is successful, False otherwise.
+    """
     drone = System()
     await drone.connect(system_address="udp://:14540")
 
@@ -24,12 +34,8 @@ async def run(height: float = 5):
     await drone.action.set_takeoff_altitude(height)
     await drone.action.takeoff()
 
+    # Wait for the drone to reach the takeoff altitude
     await asyncio.sleep(10)
-
-    print("-- Landing")
-    await drone.action.land()
-
-    await asyncio.sleep(5)
 
 if __name__ == "__main__":
     import sys

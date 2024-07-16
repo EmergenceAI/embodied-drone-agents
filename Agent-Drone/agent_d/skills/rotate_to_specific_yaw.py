@@ -1,9 +1,20 @@
-# filename: rotate_to_specific_yaw.py
 import asyncio
+from typing import Annotated
 from mavsdk import System
 from mavsdk.offboard import OffboardError, PositionNedYaw
 
-async def rotate_to_yaw(yaw):
+async def rotate_to_yaw(
+    yaw: Annotated[float, "Yaw angle to rotate to"] = 0.0
+):
+    """
+    Rotates the drone to the specified yaw angle.
+
+    Parameters:
+    yaw (float): Yaw angle to rotate to. Default is 0.0 degrees.
+
+    Returns:
+    bool: True if the operation is successful, False otherwise.
+    """
     drone = System()
     await drone.connect(system_address="udp://:14540")
 
@@ -44,8 +55,15 @@ async def rotate_to_yaw(yaw):
 
 if __name__ == "__main__":
     import sys
-    if len(sys.argv) != 2:
-        print("Usage: python3 rotate_to_specific_yaw.py <yaw>")
-        sys.exit(1)
-    yaw = float(sys.argv[1])
+
+    # Set default value
+    yaw = 0.0
+
+    # Override default value with provided argument
+    if len(sys.argv) > 1:
+        try:
+            yaw = float(sys.argv[1])
+        except ValueError:
+            print("Invalid yaw value. Using default yaw of 0.0 degrees.")
+
     asyncio.run(rotate_to_yaw(yaw))

@@ -1,8 +1,13 @@
-# filename: return_to_launch.py
 import asyncio
 from mavsdk import System
 
 async def return_to_launch():
+    """
+    Returns the drone to its launch location.
+
+    Returns:
+    bool: True if the operation is successful, False otherwise.
+    """
     drone = System()
     await drone.connect(system_address="udp://:14540")
 
@@ -18,7 +23,4 @@ async def return_to_launch():
     # Wait for the drone to return to the launch location and land
     await asyncio.sleep(30)
 
-    print("-- Return to launch complete")
-
-if __name__ == "__main__":
-    asyncio.run(return_to_launch())
+    p

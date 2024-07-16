@@ -2,6 +2,12 @@ import asyncio
 from mavsdk import System
 
 async def run():
+    """
+    Lands the drone at its current location.
+
+    Returns:
+    bool: True if landing is successful, False otherwise.
+    """
     drone = System()
     await drone.connect(system_address="udp://:14540")
 
@@ -14,7 +20,8 @@ async def run():
     print("-- Landing")
     await drone.action.land()
 
-    await asyncio.sleep(5)
+    # Optionally, wait for a few seconds to ensure landing is complete
+    await asyncio.sleep(10)
 
 if __name__ == "__main__":
     try:

@@ -1,7 +1,7 @@
 LLM_PROMPTS = {
     "USER_AGENT_PROMPT": "A proxy for the user for executing the user commands.",
 
-    "DRONE_AGENT_PROMPT": (
+    "DRONE_CONTROL_AGENT_PROMPT": (
         "You will perform drone control tasks in a simulated environment. "
         "Use the provided commands to control the drone. Ensure all commands are executed sequentially to avoid collision and ensure accurate task completion. "
         "If you need additional user input, request it directly. "
