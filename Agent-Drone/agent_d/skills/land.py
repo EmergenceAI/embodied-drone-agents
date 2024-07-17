@@ -1,7 +1,8 @@
 import asyncio
 from mavsdk import System
+from typing import Annotated
 
-async def run():
+async def land() ->  Annotated[str, "A message indicating the status"]:
     """
     Lands the drone at its current location.
 
@@ -22,6 +23,8 @@ async def run():
 
     # Optionally, wait for a few seconds to ensure landing is complete
     await asyncio.sleep(10)
+
+    return "Landed"
 
 if __name__ == "__main__":
     try:

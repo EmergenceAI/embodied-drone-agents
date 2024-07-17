@@ -1,7 +1,8 @@
 import asyncio
 from mavsdk import System
+from typing import Annotated
 
-async def return_to_launch():
+async def return_to_launch() -> Annotated[str, "A message indicating the status"]:
     """
     Returns the drone to its launch location.
 
@@ -23,4 +24,6 @@ async def return_to_launch():
     # Wait for the drone to return to the launch location and land
     await asyncio.sleep(30)
 
-    p
+    return "Returned to launch"
+
+    

@@ -2,7 +2,7 @@ import asyncio
 from typing import Annotated
 from mavsdk import System
 
-async def run(height: Annotated[float, "Altitude to reach after takeoff"] = 5):
+async def takeoff(height: Annotated[float, "Altitude to reach after takeoff"] = 5) ->  Annotated[str, "A message indicating the status"]:
     """
     Takes off the drone to the specified height.
 
@@ -36,6 +36,8 @@ async def run(height: Annotated[float, "Altitude to reach after takeoff"] = 5):
 
     # Wait for the drone to reach the takeoff altitude
     await asyncio.sleep(10)
+
+    return "Took off"
 
 if __name__ == "__main__":
     import sys

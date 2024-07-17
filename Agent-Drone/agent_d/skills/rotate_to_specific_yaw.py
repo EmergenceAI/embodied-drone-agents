@@ -5,7 +5,7 @@ from mavsdk.offboard import OffboardError, PositionNedYaw
 
 async def rotate_to_yaw(
     yaw: Annotated[float, "Yaw angle to rotate to"] = 0.0
-):
+) ->  Annotated[str, "A message indicating the status"]:
     """
     Rotates the drone to the specified yaw angle.
 
@@ -52,6 +52,7 @@ async def rotate_to_yaw(
         print(f"Stopping offboard mode failed with error code: {error._result.result}")
 
     print("-- Rotate complete")
+    return "-- Rotate complete"
 
 if __name__ == "__main__":
     import sys

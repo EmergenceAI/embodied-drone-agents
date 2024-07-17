@@ -8,7 +8,7 @@ async def follow_me(
     longitude: Annotated[float, "Longitude of the target location"] = 0.0,
     altitude: Annotated[float, "Altitude of the target location"] = 10.0,
     velocity: Annotated[float, "Velocity of the target"] = 1.0
-):
+) ->  Annotated[str, "A message indicating the status"]:
     """
     Follows the specified target location with given latitude, longitude, altitude, and velocity.
 
@@ -19,7 +19,7 @@ async def follow_me(
     velocity (float): Velocity of the target. Default is 1.0 m/s.
 
     Returns:
-    bool: True if the operation is successful, False otherwise.
+    str: True if the operation is successful, False otherwise.
     """
     drone = System()
     await drone.connect(system_address="udp://:14540")
@@ -54,6 +54,7 @@ async def follow_me(
     await drone.follow_me.stop()
 
     print("-- Follow Me complete")
+    return "-- Follow Me complete"
 
 if __name__ == "__main__":
     import sys

@@ -9,7 +9,7 @@ async def circle_a_point(
     x_center: Annotated[float, "X coordinate of the center point"] = 0,
     y_center: Annotated[float, "Y coordinate of the center point"] = 0,
     altitude: Annotated[float, "Altitude to maintain during circling"] = 5
-):
+) ->  Annotated[str, "A message indicating the status"]:
     """
     Circles the drone around a specific point at a given radius and altitude.
 
@@ -75,6 +75,7 @@ async def circle_a_point(
         print(f"Stopping offboard mode failed with error code: {error._result.result}")
 
     print("-- Circle complete")
+    return "Circle complete"
 
 if __name__ == "__main__":
     import sys

@@ -7,7 +7,7 @@ async def hover_at_location(
     x: Annotated[float, "X coordinate to hover at"] = 0,
     y: Annotated[float, "Y coordinate to hover at"] = 0,
     z: Annotated[float, "Z coordinate (altitude) to hover at"] = 0
-):
+) ->  Annotated[str, "A message indicating the status"]:
     """
     Hovers the drone at the specified coordinates.
 
@@ -56,6 +56,7 @@ async def hover_at_location(
         return
 
     print(f"-- Hovering at ({x}, {y}, {z}) indefinitely")
+    return f"-- Hovering at ({x}, {y}, {z}) indefinitely"
 
     # Indefinite hover, awaiting the next command
     while True:

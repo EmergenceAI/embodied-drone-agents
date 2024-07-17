@@ -7,7 +7,7 @@ async def fly_to(
     x: Annotated[float, "X coordinate to fly to"] = 0,
     y: Annotated[float, "Y coordinate to fly to"] = 0,
     z: Annotated[float, "Z coordinate (altitude) to fly to"] = 0
-):
+) ->  Annotated[str, "A message indicating the status"]:
     """
     Flies the drone to the specified coordinates.
 
@@ -56,6 +56,7 @@ async def fly_to(
         print(f"Stopping offboard mode failed with error code: {error._result.result}")
 
     print("-- Fly to complete")
+    return "-- Fly to complete"
 
 if __name__ == "__main__":
     import sys

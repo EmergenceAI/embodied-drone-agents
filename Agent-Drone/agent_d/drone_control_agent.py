@@ -1,5 +1,8 @@
 from string import Template
 import autogen  # type: ignore
+from dotenv import load_dotenv
+import os
+
 
 from agent_d.skills import (
     takeoff, land, fly_to_coordinates, circle_a_point,
@@ -7,6 +10,9 @@ from agent_d.skills import (
 )
 from agent_d.utils.helper_functions import example_helper
 from agent_d.utils.prompts import LLM_PROMPTS
+
+load_dotenv()
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 class DroneControlAgent:
     def __init__(self, config_list, user_proxy_agent): # type: ignore
@@ -17,12 +23,13 @@ class DroneControlAgent:
         if user_ltm:
             user_ltm = "\n" + user_ltm
             system_message = Template(system_message).substitute(basic_user_information=user_ltm)
-
+        
         self.agent = autogen.AssistantAgent(
             name="drone_control_agent",
             system_message=system_message,
+            
             llm_config={
-                "config_list": config_list,
+                "config_list": [{"model": "gpt-4", "api_key": OPENAI_API_KEY}],
                 "cache_seed": 2,
                 "temperature": 0.0
             },
@@ -30,7 +37,7 @@ class DroneControlAgent:
 
         self.user_proxy_agent = autogen.UserProxyAgent(
             name="user_proxy_agent",
-            is_termination_msg=lambda x: x.get("content", "") and x.get("content", "").rstrip().endswith("TERMINATE"),
+            is_termination_msg=lambda x: x.get("content", "") and x.get("content", "").rstrip().endswith("##TERMINATE##"),
             human_input_mode="NEVER",
             max_consecutive_auto_reply=10,
             code_execution_config={
@@ -46,11 +53,11 @@ class DroneControlAgent:
         return None
 
     def __register_skills(self):
-        self.user_proxy_agent.register_for_execution()(takeoff.run)
-        self.agent.register_for_llm(description="Take off the drone.")(takeoff.run)
+        self.user_proxy_agent.register_for_execution()(takeoff.takeoff)
+        self.agent.register_for_llm(description="Take off the drone.")(takeoff.takeoff)
 
-        self.user_proxy_agent.register_for_execution()(land.run)
-        self.agent.register_for_llm(description="Land the drone.")(land.run)
+        self.user_proxy_agent.register_for_execution()(land.land)
+        self.agent.register_for_llm(description="Land the drone.")(land.land)
 
         self.user_proxy_agent.register_for_execution()(fly_to_coordinates.fly_to)
         self.agent.register_for_llm(description="Fly the drone to specified coordinates.")(fly_to_coordinates.fly_to)
@@ -70,19 +77,16 @@ class DroneControlAgent:
         self.user_proxy_agent.register_for_execution()(hover_at_location.hover_at_location)
         self.agent.register_for_llm(description="Hover the drone at a specific location.")(hover_at_location.hover_at_location)
 
-        self.user_proxy_agent.register_for_execution()(example_helper)
-        self.agent.register_for_llm(description="Example helper function.")(example_helper)
-
-        self.user_proxy_agent.register_reply(
-            [autogen.Agent, None],
-            reply_func=self.print_message_from_user_proxy,
-            config={"callback": None},
-        )
-        self.agent.register_reply(
-            [autogen.Agent, None],
-            reply_func=self.print_message_from_agent,
-            config={"callback": None},
-        )
+        # self.user_proxy_agent.register_reply(
+        #     [autogen.Agent, None],
+        #     # reply_func=self.print_message_from_user_proxy,
+        #     config={"callback": None},
+        # )
+        # self.agent.register_reply(
+        #     [autogen.Agent, None],
+        #     # reply_func=self.print_message_from_agent,
+        #     config={"callback": None},
+        # )
 
     def print_message_from_user_proxy(self, *args, **kwargs):
         pass
@@ -90,10 +94,18 @@ class DroneControlAgent:
     def print_message_from_agent(self, *args, **kwargs):
         pass
 
-    async def run(self):
+    async def run_conversation(self):
         while True:
             user_input = input("Enter your command: ")
             if user_input.lower() == "exit":
                 break
-            response = await self.agent.process_input(user_input)
+            # response = await self.agent.chat({"content": user_input})
+
+            result=await self.user_proxy_agent.a_initiate_chat(  # noqa: F704
+            self.agent,
+            message=user_input,
+            cache=None)
+
+            summary = result.summary
+            response = { 'type':'answer', 'content': summary }
             print(f"Agent response: {response}")

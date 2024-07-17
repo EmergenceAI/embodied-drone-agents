@@ -21,7 +21,7 @@ def main():
     agent = DroneControlAgent(config_list=[], user_proxy_agent= None)
     
     # Run the agent (assuming run is an asyncio coroutine)
-    asyncio.run(agent.run())
+    asyncio.run(agent.run_conversation())
 
 if __name__ == "__main__":
     main()
