@@ -8,8 +8,9 @@ Welcome to the Embodied Drone Agents project! This repository contains code for 
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Examples](#examples)
+- [Examples](#example-prompts)
 - [Contributing](#contributing)
+- [To-Do](#to-do)
 - [Acknowledgements](#acknowledgements)
 
 ## Introduction
@@ -53,28 +54,18 @@ python main.py
 
 You can customize the behavior by modifying the configuration files and scripts provided in the `config` and `scripts` directories.
 
-## Examples
+## Example Prompts
 
 Here are a few examples to get you started:
 
 1. **Takeoff and Land:**
-   ```python
-   from drone_agent import DroneAgent
-
-   agent = DroneAgent()
-   agent.execute("Take off")
-   agent.execute("Land")
-   ```
+   Take off to a height of 10m, and then come back down
 
 2. **Fly to a Specific Location:**
-   ```python
-   from drone_agent import DroneAgent
+   Fly to coordinates 10, 8, 6. Then, fly to the origin.
 
-   agent = DroneAgent()
-   agent.execute("Fly to latitude 47.397742 and longitude 8.545594")
-   ```
-
-For more examples and detailed usage, please refer to the [documentation](docs/).
+3. **Complex Multi-Step Tasks:**
+   Fly up, to the left, to the right, and then in a circle
 
 ## Contributing
 
@@ -87,6 +78,10 @@ We welcome contributions to the Embodied Drone Agents project! If you have any i
 5. **Create a pull request.**
 
 Please ensure your code follows the project's coding standards and includes appropriate tests.
+
+## To-Do
+
+Still need to improve the voice -> text -> query -> autogen -> MavSDK pipeline. Also, find a way to add Gazebo state as recurring input into the high-level planner LLM agent, so that more complex tasks can be achieved.
 
 ## Acknowledgements
 
