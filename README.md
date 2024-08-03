@@ -81,7 +81,9 @@ Please ensure your code follows the project's coding standards and includes appr
 
 ## To-Do
 
-Still need to improve the voice -> text -> query -> autogen -> MavSDK pipeline. Also, find a way to add Gazebo state as recurring input into the high-level planner LLM agent, so that more complex tasks can be achieved.
+Still need to implement the voice -> text -> query -> autogen -> MavSDK pipeline. 
+
+One of our primary goals was to find a way to feed in the state of the Gazebo simulator as information into the agent system. In our skills, we have an example get_objects() skill that has yet to be implemented. We were unable to get pygazebo and gz transport libraries working, so we couldn't get object data from gazebo simulator.
 
 ## Acknowledgements
 
