@@ -18,6 +18,10 @@ Welcome to the Embodied Drone Agents project! This repository contains code for 
 
 Embodied Drone Agents is a project focused on developing embodied AI agents in drones that can understand and execute complex tasks based on natural language instructions. By leveraging AutoGen for language processing and MavSDK for drone control, we aim to create a seamless interface for drone operation.
 
+**Project demo video**
+[![Watch the video](https://img.youtube.com/vi/NRuVsO5KgGA/maxresdefault.jpg)](https://youtu.be/NRuVsO5KgGA)
+
+
 ## System Information
 This project relies on the following technologies:
 - Ubuntu 22.04 LTS
