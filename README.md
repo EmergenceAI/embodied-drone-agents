@@ -18,6 +18,8 @@ Welcome to the Embodied Drone Agents project! This repository contains code for 
 
 Embodied Drone Agents is a project focused on developing embodied AI agents in drones that can understand and execute complex tasks based on natural language instructions. By leveraging AutoGen for language processing and MavSDK for drone control, we aim to create a seamless interface for drone operation.
 
+Currently, the repository has two main directories, InitialAgent-D and Agent-Drone. InitialAgent-D was our first attempt at using a single Autogen agent to accomplish autonomous programmatic control over the drone. The working project is located in the Agent-Drone directory. It can be ran by activating a virtual environment, installing all the requirements found in requirements.txt, and running Agent-Drone/main.py.
+
 **Project demo video**
 [![Watch the video](https://img.youtube.com/vi/NRuVsO5KgGA/maxresdefault.jpg)](https://youtu.be/NRuVsO5KgGA)
 
