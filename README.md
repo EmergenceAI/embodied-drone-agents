@@ -5,6 +5,7 @@ Welcome to the Embodied Drone Agents project! This repository contains code for 
 ## Table of Contents
 
 - [Introduction](#introduction)
+- [System Information](#system-information)
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
@@ -16,6 +17,21 @@ Welcome to the Embodied Drone Agents project! This repository contains code for 
 ## Introduction
 
 Embodied Drone Agents is a project focused on developing embodied AI agents in drones that can understand and execute complex tasks based on natural language instructions. By leveraging AutoGen for language processing and MavSDK for drone control, we aim to create a seamless interface for drone operation.
+
+## System Information
+This project relies on the following technologies:
+- Ubuntu 22.04 LTS
+- Windows Subsystem for Linux (when developing on Windows computer)
+- PX4
+- Python 3.9+
+- MavSDK Python package
+- Gazebo PX4 shell (make px4_sitl gazebo)
+- Other Python package requirements
+
+*Read more about software dependencies in the set up section*
+
+The hardware our project uses is the HolyBro x500 Drone
+
 
 ## Features
 
@@ -56,7 +72,7 @@ You can customize the behavior by modifying the configuration files and scripts 
 
 ## Example Prompts
 
-Here are a few examples to get you started:
+After running main.py, you will be prompted to enter a query for the drone. Here are example queries to enter.
 
 1. **Takeoff and Land:**
    Take off to a height of 10m, and then come back down
@@ -81,9 +97,31 @@ Please ensure your code follows the project's coding standards and includes appr
 
 ## To-Do
 
-Still need to implement the voice -> text -> query -> autogen -> MavSDK pipeline. 
+### Voice enablement
+Currently, the script "voice_to_text.py" in the InitialAgentD directory get a voice recording through a GUI and transcribes it into text. This voice -> text script needs to be integrated with the AgentD project to create a end-to-end voice to drone movement system. The entire pipeline should look like this:
 
-One of our primary goals was to find a way to feed in the state of the Gazebo simulator as information into the agent system. In our skills, we have an example get_objects() skill that has yet to be implemented. We were unable to get pygazebo and gz transport libraries working, so we couldn't get object data from gazebo simulator.
+```mermaid
+---
+title: System Pipeline
+---
+flowchart TD;
+    voice-->id1[text query];
+    id1[text query]-->autogen;
+    autogen-->planner & control;
+    planner <--> control;
+    control --> id2[MavSDK skill calls];
+    id2[MavSDK skill calls]-->Gazebo;
+    id2[MavSDK skill calls]-->Hardware;
+   
+```
+
+### Autogen State Input
+One of our primary goals was to find a way to feed in the state of the Gazebo simulator as information into the agent system. In our skills, we have an example get_objects() skill that has yet to be implemented. We were unable to get pygazebo and gz transport libraries working, so we couldn't get object data from gazebo simulator. Currently, in Agent-Drone/agent_d/skills/ we have scripts get_objects.py and get_poses.sh. Both of these scripts were unsuccessful attempts to extract the information of objects in the simulators. 
+
+In order to implement this, we recommend to try to get the skill get_objects.py working so that it gets formatted data of the objects in the simulator, and simply add it as a skill in drone_control_agent.py. When adding it as a skill, be sure to register it for both the LLM and executor.
+
+### Drone Hardware
+Having difficulty with getting hardware drone to pass pre-flight checks. Need to demonstrate basic programmatic control of the drone, and then simply use the autogen system.
 
 ## Acknowledgements
 
