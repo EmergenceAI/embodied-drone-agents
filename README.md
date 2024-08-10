@@ -47,6 +47,13 @@ The hardware our project uses is the HolyBro x500 Drone
 - **Extensibility**: Easily add new commands and behaviors through modular design.
 - **Voice capability**: Users can input either voice or text queries into the agent system.
 
+### Skills & Prompting
+Found in Agent-Drone/agent_d/skills/ are various python scripts that are skills the agent can use to move the drone. The scripts all use Python's MavSDK package. The planner LLM agent has knowledge about what skills can be executed, and the control agent has power only to execute the skills. 
+Accessible skills: **takeoff, land, circle a point, fly to coordinates, hover at location, return to launch, & rotate to specific yaw**
+To-Be Implemented skills: **follow me, got objects, & get poses**
+
+Prompts.py found in Agent-Drone/agent_d/ is crucial to the Autogen agent system for understanding what their roles are. Prompts.py contains prompts for the agents and for each skill, outlining what each component means. Furthermore, Autogen understands the parameters and return types of external functions via the Python package Annotated from the typing library. Each of our skills' functions are annotated.
+
 ## Installation
 
 To get started with the Embodied Drone Agents project, it's important to determine the type of computer that you own and what your goals are with respect to the use of this project. This project is not compatible with Apple devices. You must use either a Windows or Ubuntu Linux machine. Follow these steps:
@@ -288,8 +295,5 @@ We are having some difficulty with getting the drone hardware to pass pre-flight
 We would like to thank the following individuals and organizations for their invaluable contributions as we developed this project.
 - **Aniketh Arvind** & **Mihir Kulshreshtha**, developers
 - **Ashish Jagmohan**, primary supervisor
-- **Tamer Abuelsaad**, technical advisor
-- **Aditya Vempaty**, technical advisor
-- **Deepak Akkil**, technical advisor
-- **Ravi Kokku**, technical advisor
-- **Emergence AI**, AI agent company
+- **Tamer Abuelsaad, Aditya Vempaty, Deepak Akkil, & Ravi Kokku** technical advisors
+- [**Emergence AI**](https://www.emergence.ai/), AI agent company
