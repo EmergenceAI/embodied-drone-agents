@@ -49,7 +49,9 @@ The hardware our project uses is the HolyBro x500 Drone
 
 ### Skills & Prompting
 Found in Agent-Drone/agent_d/skills/ are various python scripts that are skills the agent can use to move the drone. The scripts all use Python's MavSDK package. The planner LLM agent has knowledge about what skills can be executed, and the control agent has power only to execute the skills. 
+
 Accessible skills: **takeoff, land, circle a point, fly to coordinates, hover at location, return to launch, & rotate to specific yaw**
+
 To-Be Implemented skills: **follow me, got objects, & get poses**
 
 Prompts.py found in Agent-Drone/agent_d/ is crucial to the Autogen agent system for understanding what their roles are. Prompts.py contains prompts for the agents and for each skill, outlining what each component means. Furthermore, Autogen understands the parameters and return types of external functions via the Python package Annotated from the typing library. Each of our skills' functions are annotated.
