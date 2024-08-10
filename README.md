@@ -269,7 +269,7 @@ flowchart TD;
     voice-->id1[text query];
     id1[text query]-->autogen;
     autogen-->planner & control;
-    planner  control;
+    planner <-->  control;
     control --> id2[MavSDK skill calls];
     id2[MavSDK skill calls]-->Gazebo;
     id2[MavSDK skill calls]-->Hardware;
