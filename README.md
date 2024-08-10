@@ -111,7 +111,8 @@ To get started with the Embodied Drone Agents project, it's important to determi
       cd ~/PX4-Autopilot/
       ```
       Setup environment:
-      If setup_gazebo.bash doesn't exist, then create it using the following steps:
+      First, check if setup_gazebo.bash exists by looking through the full PX4-Autopilot directory, as it may be in a different location. Check within both ~/PX4-Autopilot/Tools/ and ~/PX4-Autopilot/Tools/simulation/gazebo-classic/ for setup_gazebo.bash.
+      If setup_gazebo.bash exists already, then note the full path where it exists and jump directly to step 'e'. If it doesn't exist, then create it using the following steps and skip step 'e':
       ```
       cd ~/PX4-Autopilot/Tools
       nano setup_gazebo.bash
@@ -147,12 +148,36 @@ To get started with the Embodied Drone Agents project, it's important to determi
       source ~/.bashrc
       ```
 
-   e. Run Gazebo:
+   e. Choose the option that best matches your project structure and contains the correct directories for setup_gazebo.bash and sitl_gazebo on your machine. Then, add the appropriate lines to the end of your /.bashrc file:
+      ```
+      nano ~/.bashrc
+      ```
+      Option 1:
+      ```
+      source ~/PX4-Autopilot/Tools/simulation/gazebo-classic/setup_gazebo.bash ~/PX4-Autopilot ~/PX4-Autopilot/build/px4_sitl_default
+      export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:~/PX4-Autopilot:~/PX4-Autopilot/Tools/simulation/gazebo-classic/sitl_gazebo-classic
+      ```
+      Option 2:
+      ```
+      source ~/PX4-Autopilot/Tools/setup_gazebo.bash ~/PX4-Autopilot ~/PX4-Autopilot/build/px4_sitl_default
+      export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:~/PX4-Autopilot:~/PX4-Autopilot/Tools/sitl_gazebo
+      ```
+      Option 3:
+      ```
+      source ~/PX4-Autopilot/PathToBashFile/setup_gazebo.bash ~/PX4-Autopilot ~/PX4-Autopilot/build/px4_sitl_default
+      export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:~/PX4-Autopilot:~/PX4-Autopilot/PathToGazeboFile/sitl_gazebo
+      ```
+      Save and exit (Ctrl+O, Enter, Ctrl+X)
+      ```
+      source ~/.bashrc
+      ```
+
+   f. Run Gazebo:
       ```
       make px4_sitl gazebo
       ```
 
-5. **Setup for Linux (Ubuntu):**
+6. **Setup for Linux (Ubuntu):**
 
    a. Open an Ubuntu terminal and run:
       ```
@@ -189,7 +214,7 @@ To get started with the Embodied Drone Agents project, it's important to determi
       make px4_sitl gazebo
       ```
 
-6. **Start mavsdk_server:**
+7. **Start mavsdk_server:**
    Open a new terminal (making sure to keep the Gazebo terminal open) and run:
    ```
    mavsdk_server udp://:14540
@@ -217,7 +242,7 @@ After running main.py, you will be prompted to enter a query for the drone. Here
    Fly to coordinates 10, 8, 6. Then, fly to the origin.
 
 3. **Complex Multi-Step Tasks:**
-   Fly up, to the left, to the right, and then in a circle.
+   Takeoff to 12 meters, go to 2, 6 at that same altitude, then go left, then in a circle, and then land back where you took off from.
 
 ## Contributing
 
