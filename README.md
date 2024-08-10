@@ -18,7 +18,7 @@ Welcome to the Embodied Drone Agents project! This repository contains code for 
 
 Embodied Drone Agents is a project focused on developing embodied AI agents in drones that can understand and execute complex tasks based on natural language instructions. By leveraging AutoGen for language processing and MavSDK for drone control, we aim to create a seamless interface for drone operation.
 
-Currently, the repository has two main directories, InitialAgent-D and Agent-Drone. InitialAgent-D was our first attempt at using a single Autogen agent to accomplish autonomous programmatic control over the drone. The working project is located in the Agent-Drone directory. It can be ran by activating a virtual environment, installing all the requirements found in requirements.txt, and running Agent-Drone/main.py.
+Currently, the repository has two main directories, InitialAgent-D and Agent-Drone. InitialAgent-D was our first attempt at using a single Autogen agent to accomplish autonomous programmatic control over the drone. The working project is located in the Agent-Drone directory. It can be run by activating a virtual environment, installing all the requirements found in requirements.txt, and running Agent-Drone/main.py.
 
 **Project demo video**
 [![Watch the video](https://img.youtube.com/vi/NRuVsO5KgGA/maxresdefault.jpg)](https://youtu.be/NRuVsO5KgGA)
@@ -49,7 +49,7 @@ The hardware our project uses is the HolyBro x500 Drone
 
 ## Installation
 
-To get started with the Embodied Drone Agents project, follow these steps:
+To get started with the Embodied Drone Agents project, it's important to determine the type of computer that you own and what your goals are with respect to the use of this project. This project is not compatible with Apple devices. You must use either a Windows or Ubuntu Linux machine. Follow these steps:
 
 1. **Clone the repository:**
    ```bash
@@ -66,19 +66,149 @@ To get started with the Embodied Drone Agents project, follow these steps:
 3. **Setup MavSDK:**
    Follow the [MavSDK installation guide](https://mavsdk.mavlink.io/main/en/getting_started/installation.html) to install MavSDK.
 
+4. **Setup for Windows:**
+
+   a. Setup Ubuntu Subsystem:
+      - Open Windows Powershell as Admin
+      - Run the following commands:
+        ```
+        dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+        dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+        wsl --set-default-version 2
+        ```
+      - Install Ubuntu 22.04 via the Microsoft Store
+      - Run: `wsl --install`
+      - In the Ubuntu terminal, run:
+        ```
+        sudo apt update
+        sudo apt upgrade
+        ```
+
+   b. Setup PX4:
+      ```
+      cd
+      git clone https://github.com/PX4/PX4-Autopilot.git --recursive
+      bash ./PX4-Autopilot/Tools/setup/ubuntu.sh
+      # Close terminal and reopen terminal
+      cd PX4-Autopilot/
+      make px4_sitl
+      ```
+
+   c. Setup MAVSDK:
+      ```
+      cd ..
+      sudo apt update
+      sudo apt install -y git cmake build-essential libboost-system-dev libeigen3-dev libopencv-dev
+      git clone https://github.com/mavlink/MAVSDK.git
+      cd MAVSDK
+      pip install mavsdk
+      cd ..
+      ```
+
+   d. Setup Gazebo:
+      ```
+      sudo apt install gazebo
+      cd ~/PX4-Autopilot/
+      ```
+      Setup environment:
+      If setup_gazebo.bash doesn't exist, then create it using the following steps:
+      ```
+      cd ~/PX4-Autopilot/Tools
+      nano setup_gazebo.bash
+      ```
+      Use the following code within the bash file:
+      ```
+      #!/bin/bash
+
+      # Set Gazebo plugin path
+      export GAZEBO_PLUGIN_PATH=$GAZEBO_PLUGIN_PATH:~/PX4-Autopilot/build/px4_sitl_default/build_gazebo
+
+      # Set Gazebo model path
+      export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:~/PX4-Autopilot/Tools/sitl_gazebo/models
+
+      # Set library path
+      export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+
+      # Set ROS package path
+      export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:~/PX4-Autopilot:~/PX4-Autopilot/Tools/sitl_gazebo
+      ```
+      Save and exit (Ctrl+O, Enter, Ctrl+X)
+      ```
+      chmod +x setup_gazebo.bash
+      nano ~/.bashrc
+      ```
+      Add these lines to the end of the file:
+      ```
+      source ~/PX4-Autopilot/Tools/setup_gazebo.bash ~/PX4-Autopilot ~/PX4-Autopilot/build/px4_sitl_default
+      export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:~/PX4-Autopilot:~/PX4-Autopilot/Tools/sitl_gazebo
+      ```
+      Save and exit (Ctrl+O, Enter, Ctrl+X)
+      ```
+      source ~/.bashrc
+      ```
+
+   e. Run Gazebo:
+      ```
+      make px4_sitl gazebo
+      ```
+
+5. **Setup for Linux (Ubuntu):**
+
+   a. Open an Ubuntu terminal and run:
+      ```
+      sudo apt update
+      sudo apt upgrade
+      ```
+
+   b. Setup PX4:
+      ```
+      cd
+      git clone https://github.com/PX4/PX4-Autopilot.git --recursive
+      bash ./PX4-Autopilot/Tools/setup/ubuntu.sh
+      # Close terminal and reopen terminal
+      cd PX4-Autopilot/
+      make px4_sitl
+      ```
+
+   c. Setup MAVSDK:
+      ```
+      cd ..
+      sudo apt update
+      sudo apt install -y git cmake build-essential libboost-system-dev libeigen3-dev libopencv-dev
+      git clone https://github.com/mavlink/MAVSDK.git
+      cd MAVSDK
+      pip install mavsdk
+      cd ..
+      ```
+
+   d. Setup Gazebo:
+      Follow the same Gazebo setup steps as in the Windows instructions above.
+
+   e. Run Gazebo:
+      ```
+      make px4_sitl gazebo
+      ```
+
+6. **Start mavsdk_server:**
+   Open a new terminal (making sure to keep the Gazebo terminal open) and run:
+   ```
+   mavsdk_server udp://:14540
+   ```
+
 ## Usage
 
-To use the Embodied Drone Agents, you can run the main script and provide language prompts to control the drone:
+To use the Embodied Drone Agents, open another terminal (you should now have 3 terminals open) and run the main script to provide natural language prompts to control the drone:
 
-```bash
-python main.py
+```
+cd /Agent-Drone
+python3 main.py
 ```
 
 You can customize the behavior by modifying the configuration files and scripts provided in the `config` and `scripts` directories.
 
 ## Example Prompts
 
-After running main.py, you will be prompted to enter a query for the drone. Here are example queries to enter.
+After running main.py, you will be prompted to enter a query for the drone. Here are some example queries to enter.
 
 1. **Takeoff and Land:**
    Take off to a height of 10m, and then come back down
@@ -87,7 +217,7 @@ After running main.py, you will be prompted to enter a query for the drone. Here
    Fly to coordinates 10, 8, 6. Then, fly to the origin.
 
 3. **Complex Multi-Step Tasks:**
-   Fly up, to the left, to the right, and then in a circle
+   Fly up, to the left, to the right, and then in a circle.
 
 ## Contributing
 
@@ -104,7 +234,7 @@ Please ensure your code follows the project's coding standards and includes appr
 ## To-Do
 
 ### Voice enablement
-Currently, the script "voice_to_text.py" in the InitialAgentD directory get a voice recording through a GUI and transcribes it into text. This voice -> text script needs to be integrated with the AgentD project to create a end-to-end voice to drone movement system. The entire pipeline should look like this:
+Currently, the script "voice_to_text.py" in the InitialAgentD directory gets a voice recording through a GUI and transcribes it into text. This voice -> text script needs to be integrated with the AgentD project to create an end-to-end voice-to-drone movement system. The entire pipeline should look like this:
 
 ```mermaid
 ---
@@ -114,20 +244,19 @@ flowchart TD;
     voice-->id1[text query];
     id1[text query]-->autogen;
     autogen-->planner & control;
-    planner <--> control;
+    planner  control;
     control --> id2[MavSDK skill calls];
     id2[MavSDK skill calls]-->Gazebo;
     id2[MavSDK skill calls]-->Hardware;
-   
 ```
 
 ### Autogen State Input
-One of our primary goals was to find a way to feed in the state of the Gazebo simulator as information into the agent system. In our skills, we have an example get_objects() skill that has yet to be implemented. We were unable to get pygazebo and gz transport libraries working, so we couldn't get object data from gazebo simulator. Currently, in Agent-Drone/agent_d/skills/ we have scripts get_objects.py and get_poses.sh. Both of these scripts were unsuccessful attempts to extract the information of objects in the simulators. 
+One of our primary goals was to find a way to feed the state of the Gazebo simulator as information into the agent system. In our skills, we have an example get_objects() skill that has yet to be implemented. We were unable to get pygazebo and gz transport libraries working, so we couldn't get object data from gazebo simulator. Currently, in Agent-Drone/agent_d/skills/, we have scripts get_objects.py and get_poses.sh. Both of these scripts were unsuccessful attempts to extract the information of objects in the simulators. 
 
-In order to implement this, we recommend to try to get the skill get_objects.py working so that it gets formatted data of the objects in the simulator, and simply add it as a skill in drone_control_agent.py. When adding it as a skill, be sure to register it for both the LLM and executor.
+In order to implement this, we recommend trying to get the skill get_objects.py working so that it gets formatted data of the objects in the simulator and simply adds it as a skill in drone_control_agent.py. When adding it as a skill, be sure to register it for both the LLM and executor.
 
 ### Drone Hardware
-Having difficulty with getting hardware drone to pass pre-flight checks. Need to demonstrate basic programmatic control of the drone, and then simply use the autogen system.
+We are having some difficulty with getting the drone hardware to pass pre-flight checks. We need to demonstrate basic programmatic control of the drone and then simply use the autogen system.
 
 ## Acknowledgements
 
