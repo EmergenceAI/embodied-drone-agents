@@ -231,12 +231,56 @@ To get started with the Embodied Drone Agents project, it's important to determi
 
 ## Usage
 
-To use the Embodied Drone Agents, open another terminal (you should now have 3 terminals open) and run the main script to provide natural language prompts to control the drone:
+### Windows
+1. **Start Gazebo**
 
-```
-cd /Agent-Drone
-python3 main.py
-```
+   a. Open Powershell and click "run as administrator":
+
+   b. Launch WSL:
+      ```
+      wsl --install
+      ```
+
+   c. Launch Gazebo:
+      ```
+      cd PX4-Autopilot/
+      make px4_sitl gazebo
+      ```
+2. **Start MavSDK server**
+
+   a. Open Powershell and click "run as administrator":
+
+   b. Launch WSL:
+      ```
+      wsl --install
+      ```
+
+   c. Start server at port:
+      ```
+      mavsdk_server udp://:14540
+      ```
+
+3. **Run Repo Code**
+
+   a. Open Powershell and click "run as administrator":
+
+   b. Launch WSL:
+      ```
+      wsl --install
+      ```
+
+   c. Mount local files:
+      ```
+      cd /mnt/[path/to/this/github/repo/]
+      ```
+
+   d. Run main.py
+      ```
+      cd /Agent-Drone/
+      python3 main.py
+      ```
+
+When running this project, you should have 2 terminals open for the Gazebo server and MavSDK server, and another terminal open to run main.py (3 terminals). You should be able to provide natural language queries to control the drone in the Gazebo simulator. Check out the [Examples](#example-prompts) section below for test prompts to query into the agent system.
 
 You can customize the behavior by modifying the configuration files and scripts provided in the `config` and `scripts` directories.
 
