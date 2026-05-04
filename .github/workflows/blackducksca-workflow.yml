@@ -14,9 +14,26 @@ on:
 jobs:
   blackducksca:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - name: Checkout Source
         uses: actions/checkout@v4
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v3
+        with:
+          token_format: access_token
+          workload_identity_provider: projects/66669732991/locations/global/workloadIdentityPools/workload-identity-pool-github/providers/workload-identity-pool-github
+          service_account: cicd-service-deploy@aip-services-dev.iam.gserviceaccount.com
+          audience: https://github.com/EmergenceAI
+          create_credentials_file: true
+      - name: Configure pip for Google Artifact Registry
+        env:
+          ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
+        run: |
+          pip config set global.extra-index-url https://oauth2accesstoken:${ACCESS_TOKEN}@us-central1-python.pkg.dev/aip-artifacts-store/aipy/simple/
       - name: Black Duck Security Scan
         id: black-duck-security-scan
         uses: blackduck-inc/black-duck-security-scan@v2
